@@ -6,4 +6,6 @@ class User < ApplicationRecord
   validates :email, uniqueness: true
 
   enum :role, %i[admin participant]
+
+  has_many :evidences, dependent: :nullify
 end
