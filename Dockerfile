@@ -1,6 +1,6 @@
 FROM ruby:latest
 
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
+RUN apt-get update -qq && apt-get install -y build-essential yarn libpq-dev nodejs
 
 RUN mkdir /gabarito
 
@@ -12,5 +12,5 @@ COPY Gemfile.lock /gabarito/Gemfile.lock
 
 RUN bundle install
 
-COPY . /gabarito/
+ADD . /gabarito
 
