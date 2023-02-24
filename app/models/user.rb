@@ -7,5 +7,5 @@ class User < ApplicationRecord
 
   enum :role, %i[admin participant]
 
-  has_many :evidences, dependent: :nullify
+  has_many :evidences
 end
