@@ -6,7 +6,6 @@ class QuestionsController < ApplicationController
 
   def index
     @questions = Question.all
-
     render json: @questions
   end
 
@@ -15,11 +14,11 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    question = Question.new(question_params)
-    if question.save
-      render json: question, status: :created, locaton: question
+    @question = Question.new(question_params)
+    if @question.save
+      render json: @question, status: :created
     else
-      render json: question.errors, status: :unprocessable_entity
+      render json: @question.errors, status: :unprocessable_entity
     end
   end
 
@@ -33,7 +32,7 @@ class QuestionsController < ApplicationController
 
   def destroy
     if @question.destroy
-      render json: @question, status: :ok
+      render json: @question, status:	:no_content
     else
       render json: @question.errors, status: :unprocessable_entity
     end
@@ -41,11 +40,12 @@ class QuestionsController < ApplicationController
 
   private
 
+  # Set questao
   def set_question
     @question = Question.find(params[:id])
   end
 
   def question_params
-    params.permit(:texto, :evidence_id)
+    params.require(:question).permit(:text, :evidence_id)
   end
 end

@@ -10,25 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_23_173745) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_24_193104) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "evidences", force: :cascade do |t|
-    t.string "name"
+  create_table "alternatives", force: :cascade do |t|
+    t.text "text"
+    t.boolean "correct"
+    t.bigint "question_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["question_id"], name: "index_alternatives_on_question_id"
+  end
+
+  create_table "answers", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "question_id"
-    t.index ["question_id"], name: "index_evidences_on_question_id"
-    t.index ["user_id"], name: "index_evidences_on_user_id"
+    t.bigint "alternatives_id"
+    t.index ["alternatives_id"], name: "index_answers_on_alternatives_id"
+    t.index ["user_id"], name: "index_answers_on_user_id"
+  end
+
+  create_table "evidences", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "questions", force: :cascade do |t|
-    t.string "texto"
+    t.bigint "evidence_id", null: false
+    t.text "text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "evidence_id"
     t.index ["evidence_id"], name: "index_questions_on_evidence_id"
   end
 
@@ -41,12 +56,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_23_173745) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "role"
-    t.bigint "evidence_id"
-    t.index ["evidence_id"], name: "index_users_on_evidence_id"
   end
 
-  add_foreign_key "evidences", "questions"
-  add_foreign_key "evidences", "users"
+  add_foreign_key "alternatives", "questions"
+  add_foreign_key "answers", "alternatives", column: "alternatives_id"
+  add_foreign_key "answers", "users"
   add_foreign_key "questions", "evidences"
-  add_foreign_key "users", "evidences"
 end

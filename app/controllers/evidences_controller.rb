@@ -7,18 +7,17 @@ class EvidencesController < ApplicationController
   def index
     @evidences = Evidence.all
 
-    render json: @evidences
+    render json: @evidences, include: [:questions]
   end
 
   # GET /evidences/1
   def show
-    render json: @evidence
+    render json: @evidence, include: [questions: { include: :alternatives }]
   end
 
   # POST Create Evidence /evidences
   def create
     evidence = Evidence.new(evidence_params)
-    evidence.user_id = @user.id
     if evidence.save
       render json: evidence, status: :created, location: evidence
     else
@@ -38,7 +37,7 @@ class EvidencesController < ApplicationController
 
   def destroy
     if @evidence.destroy
-      render json: @evidence, status: :ok
+      render json: @evidence, status: :no_content
     else
       render json: @evidence.errors, status: :unprocessable_entity
     end
@@ -51,6 +50,6 @@ class EvidencesController < ApplicationController
   end
 
   def evidence_params
-    params.permit(:name, :question_id)
+    params.require(:evidence).permit(:name, :description)
   end
 end

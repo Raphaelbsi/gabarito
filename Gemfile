@@ -53,6 +53,7 @@ group :development, :test do
   gem 'rubycritic', require: false
   gem 'shoulda-matchers', '~> 5.0'
   gem 'simplecov', require: false
+  gem 'rails-controller-testing'
 end
 
 group :development do
