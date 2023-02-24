@@ -51,6 +51,6 @@ class EvidencesController < ApplicationController
   end
 
   def evidence_params
-    params.permit(:name)
+    params.permit(:name, :question_id)
   end
 end
