@@ -2,6 +2,16 @@
 
 class AnswersController < ApplicationController
   before_action :authorize
+  before_action :set_answer, only: %i[show update destroy]
+
+  def index
+    @answers = Answer.all
+    render json: { answers: @answers }, status: :ok
+  end
+
+  def show
+    render json: { answer: @answer }, status: :ok
+  end
 
   def create
     @answer = Answer.new(answer_params)
@@ -12,19 +22,29 @@ class AnswersController < ApplicationController
     end
   end
 
-  def index
-    @answer = Answer.all
-    render json: { answers: @answer }, status: :ok
+  def update
+    if @answer.update(answer_params)
+      render json: @answer, status: :accepted
+    else
+      render json: @answer.errors, status: :unprocessable_entity
+    end
   end
 
-  def show
-    @answer = Answer.find(params[:id])
-    render json: { answer: @answer }, status: :ok
+  def destroy
+    if @answer.destroy
+      ender json: @answer, status:	:no_content
+    else
+      render json: @answer.errors, status: :unprocessable_entity
+    end
   end
 
   private
 
+  def set_answer
+    @answer = Answer.find(params[:id])
+  end
+
   def answer_params
-    params.require(:answer).permit(:alternatives_id, :user_id)
+    params.require(:answer).permit(:alternatives_id, :user_id, :evidences_id)
   end
 end
