@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EvidencesController < ApplicationController
-  before_action :authorize
+  before_action :authorize, :authorized_user
   before_action :set_evidence, only: %i[show update destroy]
   # GET /evidences
   def index

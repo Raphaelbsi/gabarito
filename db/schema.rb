@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_28_143513) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_01_115228) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,9 +27,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_28_143513) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "alternatives_id"
+    t.bigint "alternative_id"
     t.bigint "evidences_id"
-    t.index ["alternatives_id"], name: "index_answers_on_alternatives_id"
+    t.index ["alternative_id"], name: "index_answers_on_alternative_id"
     t.index ["evidences_id"], name: "index_answers_on_evidences_id"
     t.index ["user_id"], name: "index_answers_on_user_id"
   end
@@ -49,6 +49,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_28_143513) do
     t.index ["evidence_id"], name: "index_questions_on_evidence_id"
   end
 
+  create_table "rankings", force: :cascade do |t|
+    t.bigint "evidences_id", null: false
+    t.bigint "users_id", null: false
+    t.integer "points"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["evidences_id"], name: "index_rankings_on_evidences_id"
+    t.index ["users_id"], name: "index_rankings_on_users_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "password_digest"
@@ -61,8 +71,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_28_143513) do
   end
 
   add_foreign_key "alternatives", "questions"
-  add_foreign_key "answers", "alternatives", column: "alternatives_id"
+  add_foreign_key "answers", "alternatives"
   add_foreign_key "answers", "evidences", column: "evidences_id"
   add_foreign_key "answers", "users"
   add_foreign_key "questions", "evidences"
+  add_foreign_key "rankings", "evidences", column: "evidences_id"
+  add_foreign_key "rankings", "users", column: "users_id"
 end
